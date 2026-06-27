@@ -1,0 +1,26 @@
+{
+  "name": "view-photo-mini-server",
+  "version": "0.1.0",
+  "description": "Self-hosted photo gallery with albums, upload, download, and Tailscale access",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "photos",
+    "gallery",
+    "self-hosted",
+    "tailscale",
+    "heic"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "sharp": "^0.34.3"
+  }
+}

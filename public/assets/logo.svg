@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="ViewPhoto">
+  <defs>
+    <linearGradient id="vp-grad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="vp-shine" x1="20" y1="16" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Back album card -->
+  <rect x="14" y="12" width="34" height="28" rx="5" fill="url(#vp-grad)" opacity="0.28"/>
+  <!-- Main photo frame -->
+  <rect x="10" y="16" width="38" height="32" rx="6" fill="url(#vp-grad)"/>
+  <rect x="10" y="16" width="38" height="32" rx="6" fill="url(#vp-shine)"/>
+  <!-- Lens / viewfinder ring -->
+  <circle cx="29" cy="30" r="9" stroke="#ffffff" stroke-width="2.25" opacity="0.95"/>
+  <circle cx="29" cy="30" r="4.5" fill="#ffffff" opacity="0.95"/>
+  <!-- Gallery stack hint -->
+  <path d="M42 22h8a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3h-8" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+  <!-- Server base -->
+  <rect x="18" y="50" width="28" height="4" rx="2" fill="url(#vp-grad)" opacity="0.85"/>
+  <rect x="24" y="54" width="16" height="2" rx="1" fill="url(#vp-grad)" opacity="0.45"/>
+</svg>

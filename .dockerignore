@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.git
+.env
+Photos
+thumbnails
+.trash
+data
+.upload-temp
+.cursor
+.DS_Store
+*.log

@@ -1,0 +1,26 @@
+# Secrets and local config
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Photo storage and generated thumbnails
+Photos/*
+!.Photos/.gitkeep
+thumbnails/
+
+# Logs
+*.log
+
+# Runtime data
+.trash/
+.upload-temp/
+data/
+
+# OS / editor
+.DS_Store
+.cursor/
+.idea/
+.vscode/

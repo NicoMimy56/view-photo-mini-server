@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViewPhoto</title>
+  <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/logo-mark.svg?v=2">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f1f3f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0c10" media="(prefers-color-scheme: dark)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css?v=8">
+</head>
+<body>
+  <div id="app" class="app hidden">
+    <div id="purge-banner" class="purge-banner hidden">
+      <p id="purge-banner-message" class="purge-banner-message"></p>
+      <div class="purge-banner-actions">
+        <button type="button" id="purge-review-btn" class="btn btn-primary btn-sm">Controlla cestino</button>
+        <button type="button" id="purge-postpone-btn" class="btn btn-ghost btn-sm">Rimanda 3 giorni</button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="/assets/logo-mark.svg?v=2" alt="" width="40" height="40">
+        <div>
+          <span class="brand-name">ViewPhoto</span>
+          <span class="brand-tag">Mini Server</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" id="trash-btn" class="btn btn-icon btn-ghost" aria-label="Cestino"></button>
+        <button type="button" id="theme-toggle" class="btn btn-icon btn-ghost" aria-label="Cambia tema"></button>
+        <button type="button" id="upload-btn" class="btn btn-primary">
+          <span class="btn-icon-slot" id="upload-btn-icon"></span>
+          <span class="btn-label-text">Carica foto</span>
+        </button>
+        <button type="button" id="logout-btn" class="btn btn-icon btn-ghost hidden" aria-label="Esci"></button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2 class="sidebar-title">Album</h2>
+          <button type="button" id="new-folder-btn" class="btn btn-small btn-soft">
+            <span class="btn-icon-slot" id="new-folder-icon"></span>
+            Cartella
+          </button>
+        </div>
+        <nav id="folder-list" class="folder-list" aria-label="Album"></nav>
+      </aside>
+
+      <main class="main">
+        <div class="mobile-nav-bar">
+          <button type="button" id="mobile-back-btn" class="mobile-back-btn hidden" aria-label="Indietro">
+            <span id="mobile-back-icon"></span>
+            <span>Indietro</span>
+          </button>
+          <h2 id="mobile-screen-title" class="mobile-screen-title">Album</h2>
+        </div>
+
+        <div id="mobile-browse" class="mobile-browse hidden" aria-label="Album"></div>
+
+        <div id="main-content" class="main-content">
+        <div class="toolbar-row">
+          <label class="search-field">
+            <span class="search-icon" id="search-icon"></span>
+            <input type="search" id="search-input" placeholder="Cerca foto per nome…" autocomplete="off">
+          </label>
+          <div class="toolbar-controls">
+            <label class="sort-field">
+              <span class="field-label">Ordina</span>
+              <select id="sort-select" class="select-input">
+                <option value="modified">Data modifica</option>
+                <option value="taken">Data scatto</option>
+                <option value="name">Nome</option>
+                <option value="size">Dimensione</option>
+              </select>
+            </label>
+            <label class="sort-field">
+              <span class="field-label">Direzione</span>
+              <select id="order-select" class="select-input">
+                <option value="desc">Discendente</option>
+                <option value="asc">Ascendente</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="main-header">
+          <div>
+            <p class="eyebrow">Percorso</p>
+            <h1 id="page-title" class="page-title">Tutte le foto</h1>
+          </div>
+          <div class="main-header-actions">
+            <button type="button" id="select-mode-btn" class="btn btn-soft btn-small hidden">Seleziona</button>
+            <p id="photo-count" class="stat-badge">0 foto</p>
+          </div>
+        </div>
+
+        <div id="upload-progress" class="upload-progress hidden">
+          <div class="upload-progress-track">
+            <div id="upload-progress-bar" class="upload-progress-bar"></div>
+          </div>
+          <p id="upload-progress-text" class="upload-progress-text muted">Caricamento…</p>
+        </div>
+
+        <div id="selection-bar" class="selection-bar hidden">
+          <p id="selection-count" class="selection-count">0 selezionate</p>
+          <div class="selection-actions">
+            <button type="button" id="select-all-btn" class="btn btn-ghost btn-sm">Tutte</button>
+            <button type="button" id="move-selected-btn" class="btn btn-soft btn-sm" disabled>
+              <span class="btn-icon-slot" id="move-selected-icon"></span>
+              Sposta
+            </button>
+            <button type="button" id="cover-selected-btn" class="btn btn-soft btn-sm hidden" disabled>
+              Copertina
+            </button>
+            <button type="button" id="download-selected-btn" class="btn btn-primary btn-sm" disabled>
+              <span class="btn-icon-slot" id="download-selected-icon"></span>
+              Scarica ZIP
+            </button>
+            <button type="button" id="delete-selected-btn" class="btn btn-danger btn-sm" disabled>
+              <span class="btn-icon-slot" id="delete-selected-icon"></span>
+              Cestino
+            </button>
+            <button type="button" id="cancel-selection-btn" class="btn btn-ghost btn-sm">Annulla</button>
+          </div>
+        </div>
+
+        <div id="drop-zone" class="drop-zone hidden">
+          <div class="drop-zone-inner">
+            <span class="drop-zone-icon" id="drop-zone-icon"></span>
+            <p class="drop-zone-title">Trascina le foto qui</p>
+            <p class="drop-zone-hint">JPG, PNG, WebP, HEIC, MP4, MOV — puoi selezionarne quante vuoi</p>
+          </div>
+        </div>
+
+        <div id="gallery" class="gallery"></div>
+
+        <div id="empty-state" class="empty-state hidden">
+          <span class="empty-icon" id="empty-icon"></span>
+          <h2 id="empty-title">Nessuna foto</h2>
+          <p id="empty-message" class="muted">Questo album è vuoto. Carica le tue foto o trascinale nell'area sopra.</p>
+          <button type="button" id="empty-upload-btn" class="btn btn-primary">Carica foto</button>
+        </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="login-screen" class="login-screen">
+    <div class="login-shell">
+      <div class="login-hero">
+        <img class="login-hero-logo" src="/assets/logo.svg" alt="" width="80" height="80">
+        <h1>ViewPhoto</h1>
+        <p>Galleria personale sul tuo mini server. Accesso sicuro via Tailscale.</p>
+      </div>
+      <form id="login-form" class="login-card">
+        <h2>Accedi</h2>
+        <p class="muted">Inserisci le credenziali del server</p>
+        <label class="field">
+          <span class="field-label">Username</span>
+          <input type="text" id="login-username" autocomplete="username" required placeholder="admin">
+        </label>
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input type="password" id="login-password" autocomplete="current-password" required placeholder="••••••••">
+        </label>
+        <p id="login-error" class="error hidden"></p>
+        <button type="submit" class="btn btn-primary btn-block">Entra</button>
+      </form>
+    </div>
+  </div>
+
+  <dialog id="lightbox" class="lightbox">
+    <div class="lightbox-shell">
+      <div class="lightbox-toolbar">
+        <div class="lightbox-meta">
+          <p class="lightbox-label">Anteprima · <span id="lightbox-counter"></span></p>
+          <span id="lightbox-title" class="lightbox-title"></span>
+        </div>
+        <div class="lightbox-actions">
+          <button type="button" id="lightbox-prev" class="btn btn-icon btn-ghost btn-sm" aria-label="Foto precedente"></button>
+          <button type="button" id="lightbox-next" class="btn btn-icon btn-ghost btn-sm" aria-label="Foto successiva"></button>
+          <button type="button" id="lightbox-rename" class="btn btn-ghost btn-sm">
+            <span class="btn-icon-slot" id="lightbox-rename-icon"></span>
+            Rinomina
+          </button>
+          <button type="button" id="lightbox-move" class="btn btn-ghost btn-sm">
+            <span class="btn-icon-slot" id="lightbox-move-icon"></span>
+            Sposta
+          </button>
+          <a id="lightbox-download" class="btn btn-ghost btn-sm" href="#" download>
+            <span class="btn-icon-slot" id="lightbox-download-icon"></span>
+            Scarica
+          </a>
+          <button type="button" id="lightbox-delete" class="btn btn-danger-soft btn-sm">
+            <span class="btn-icon-slot" id="lightbox-delete-icon"></span>
+            Cestino
+          </button>
+          <button type="button" id="lightbox-close" class="btn btn-icon btn-ghost btn-sm" aria-label="Chiudi"></button>
+        </div>
+      </div>
+      <div class="lightbox-stage">
+        <img id="lightbox-image" alt="">
+        <video id="lightbox-video" class="hidden" controls playsinline preload="metadata"></video>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="modal">
+    <form method="dialog" id="confirm-form" class="modal-panel">
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-message" class="muted"></p>
+      <label id="confirm-label" class="field">
+        <span class="field-label" id="confirm-label-text">Digita il nome file per confermare</span>
+        <div class="confirm-expected-row">
+          <strong id="confirm-expected" class="confirm-expected-name"></strong>
+          <button type="button" id="confirm-copy" class="btn btn-ghost btn-sm">Copia</button>
+        </div>
+        <input type="text" id="confirm-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      </label>
+      <p id="confirm-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" id="confirm-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="submit" id="confirm-submit" class="btn btn-danger" disabled>Conferma</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="info-dialog" class="modal">
+    <div class="modal-panel">
+      <h2 id="info-title"></h2>
+      <p id="info-message" class="muted"></p>
+      <div class="dialog-actions dialog-actions-end">
+        <button type="button" id="info-ok" class="btn btn-primary">Ho capito</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="choice-dialog" class="modal">
+    <div class="modal-panel">
+      <h2 id="choice-title"></h2>
+      <p id="choice-message" class="muted"></p>
+      <div id="choice-actions" class="choice-actions"></div>
+      <div class="dialog-actions dialog-actions-end">
+        <button type="button" id="choice-cancel" class="btn btn-ghost">Annulla</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="folder-dialog" class="modal">
+    <form method="dialog" id="folder-form" class="modal-panel">
+      <h2>Nuovo album</h2>
+      <p class="muted">Crea una cartella o un percorso annidato, ad esempio <code>Vacanze/2025</code>.</p>
+      <label class="field">
+        <span class="field-label">Percorso</span>
+        <input type="text" id="folder-input" autocomplete="off" placeholder="Vacanze/2025" required>
+      </label>
+      <p id="folder-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" id="folder-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="submit" id="folder-submit" class="btn btn-primary">Crea album</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="rename-folder-dialog" class="modal">
+    <form method="dialog" id="rename-folder-form" class="modal-panel">
+      <h2>Rinomina album</h2>
+      <label class="field">
+        <span class="field-label">Nuovo nome</span>
+        <input type="text" id="rename-folder-input" autocomplete="off" required>
+      </label>
+      <p id="rename-folder-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" id="rename-folder-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="rename-photo-dialog" class="modal">
+    <form method="dialog" id="rename-photo-form" class="modal-panel">
+      <h2 id="rename-photo-title">Rinomina foto</h2>
+      <p id="rename-photo-hint" class="muted"></p>
+      <label class="field">
+        <span class="field-label">Nuovo nome file</span>
+        <input type="text" id="rename-photo-input" autocomplete="off" required>
+      </label>
+      <p id="rename-photo-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" id="rename-photo-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="move-dialog" class="modal">
+    <div class="modal-panel">
+      <h2 id="move-dialog-title">Sposta foto</h2>
+      <p id="move-photo-name" class="muted"></p>
+      <p class="field-label">Scegli album di destinazione</p>
+      <div id="move-folder-list" class="move-folder-list" role="listbox" aria-label="Album disponibili"></div>
+      <p id="move-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" id="move-cancel" class="btn btn-ghost">Annulla</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="trash-dialog" class="modal modal-wide">
+    <div class="modal-panel">
+      <div class="dialog-header-row">
+        <div>
+          <h2>Cestino</h2>
+          <p id="trash-count" class="muted">0 elementi</p>
+        </div>
+        <button type="button" id="trash-empty-btn" class="btn btn-danger-soft btn-sm">Svuota tutto</button>
+      </div>
+      <p class="muted">Gli elementi eliminati restano qui per 7 giorni, poi ti chiederò conferma prima di liberare spazio.</p>
+      <div id="trash-empty-state" class="empty-state compact hidden">
+        <h2>Cestino vuoto</h2>
+        <p class="muted">Le foto eliminate compariranno qui e potrai ripristinarle.</p>
+      </div>
+      <div id="trash-list" class="trash-list"></div>
+      <div class="dialog-actions dialog-actions-end">
+        <button type="button" id="trash-close-btn" class="btn btn-primary">Chiudi</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="purge-dialog" class="modal">
+    <form method="dialog" id="purge-form" class="modal-panel">
+      <h2>Svuota cestino scaduto</h2>
+      <p id="purge-message" class="muted"></p>
+      <div id="purge-list" class="purge-list"></div>
+      <label class="field">
+        <span class="field-label">Digita <strong>SVUOTA CESTINO</strong> per eliminare definitivamente</span>
+        <input type="text" id="purge-input" autocomplete="off">
+      </label>
+      <p id="purge-error" class="error hidden"></p>
+      <div class="dialog-actions">
+        <button type="button" id="purge-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="submit" id="purge-submit" class="btn btn-danger" disabled>Elimina definitivamente</button>
+      </div>
+    </form>
+  </dialog>
+
+  <input type="file" id="file-input" accept="image/*,video/*,.heic,.heif,.mp4,.mov,.m4v" multiple hidden>
+
+  <script type="module" src="/js/app.js?v=8"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js?v=2").catch(() => {});
+    }
+  </script>
+</body>
+</html>
