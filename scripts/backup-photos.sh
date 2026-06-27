@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
-# Backup cartella Photos verso destinazione esterna (USB/NAS).
-# Uso: bash scripts/backup-photos.sh /mnt/backup/viewphoto
+# Backup the Photos folder to an external destination (USB/NAS).
 #
-# Aggiungi a crontab sul Pi, es. ogni notte alle 3:00:
-# 0 3 * * * /mnt/storage/ViewPhoto/scripts/backup-photos.sh /mnt/backup/viewphoto >> /var/log/viewphoto-backup.log 2>&1
+# Usage:
+#   bash scripts/backup-photos.sh /mnt/backup/viewphoto
+#
+# Nightly cron example (3:00 AM):
+#   0 3 * * * /mnt/storage/ViewPhoto/scripts/backup-photos.sh /mnt/backup/viewphoto >> /var/log/viewphoto-backup.log 2>&1
 
 set -euo pipefail
 
 DEST="${1:-}"
 if [[ -z "$DEST" ]]; then
-  echo "Uso: $0 /percorso/backup"
+  echo "Usage: $0 /path/to/backup/destination"
   exit 1
 fi
 
@@ -21,14 +23,16 @@ TARGET="$DEST/Photos-$STAMP"
 mkdir -p "$DEST"
 
 if [[ ! -d "$SRC" ]]; then
-  echo "Cartella Photos non trovata: $SRC"
+  echo "Photos folder not found: $SRC"
   exit 1
 fi
 
 echo "[$(date -Iseconds)] Backup $SRC -> $TARGET"
 rsync -a --delete "$SRC/" "$TARGET/"
 
-# Mantieni solo gli ultimi 7 snapshot (opzionale)
-ls -1dt "$DEST"/Photos-* 2>/dev/null | tail -n +8 | xargs -r rm -rf
+# Keep only the last 7 snapshots
+if ls -1dt "$DEST"/Photos-* >/dev/null 2>&1; then
+  ls -1dt "$DEST"/Photos-* | tail -n +8 | xargs -r rm -rf
+fi
 
-echo "[$(date -Iseconds)] Backup completato"
+echo "[$(date -Iseconds)] Backup complete"

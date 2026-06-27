@@ -42,7 +42,7 @@ export function createFolderManager({
       folders = data.folders || [];
       covers = data.covers || {};
     } catch (err) {
-      console.error("Impossibile caricare gli album:", err);
+      console.error("Could not load albums:", err);
       folders = [];
       covers = {};
     }
@@ -64,7 +64,7 @@ export function createFolderManager({
     const rootBtn = document.createElement("button");
     rootBtn.type = "button";
     rootBtn.className = "folder-link";
-    rootBtn.textContent = "Tutte le foto";
+    rootBtn.textContent = "All photos";
     rootBtn.addEventListener("click", () => onSelectFolder(""));
 
     row.append(icon, rootBtn);
@@ -110,7 +110,7 @@ export function createFolderManager({
       toggle.type = "button";
       toggle.className = `folder-toggle${expanded ? " expanded" : ""}`;
       toggle.innerHTML = icons.chevron;
-      toggle.setAttribute("aria-label", expanded ? "Comprimi album" : "Espandi album");
+      toggle.setAttribute("aria-label", expanded ? "Collapse album" : "Expand album");
       toggle.addEventListener("click", (event) => {
         event.stopPropagation();
         toggleExpanded(node.path);
@@ -134,13 +134,13 @@ export function createFolderManager({
     const meta = document.createElement("span");
     meta.className = "folder-meta";
     meta.textContent = String(node.photoCount);
-    meta.title = `${node.photoCount} foto`;
+    meta.title = `${node.photoCount} photos`;
 
     const renameBtn = document.createElement("button");
     renameBtn.type = "button";
     renameBtn.className = "folder-menu-btn folder-rename-btn";
     renameBtn.innerHTML = icons.edit;
-    renameBtn.title = "Rinomina album";
+    renameBtn.title = "Rename album";
     renameBtn.addEventListener("click", (event) => {
       event.stopPropagation();
       onRequestRenameFolder(node);
@@ -150,7 +150,7 @@ export function createFolderManager({
     menu.type = "button";
     menu.className = "folder-menu-btn";
     menu.innerHTML = icons.trash;
-    menu.title = canDelete ? "Sposta nel cestino" : "Svuota l'album prima";
+    menu.title = canDelete ? "Move to trash" : "Empty the album first";
     menu.addEventListener("click", (event) => {
       event.stopPropagation();
       onRequestDeleteFolder(node);
@@ -210,7 +210,7 @@ export function bindCreateFolderDialog({ dialog, form, inputEl, errorEl, cancelB
     event.preventDefault();
     const path = inputEl.value.trim();
     if (!path) {
-      errorEl.textContent = "Inserisci un nome per la cartella.";
+      errorEl.textContent = "Enter a folder name.";
       errorEl.classList.remove("hidden");
       return;
     }

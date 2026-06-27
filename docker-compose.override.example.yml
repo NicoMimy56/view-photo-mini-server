@@ -1,0 +1,15 @@
+# Copy to docker-compose.override.yml (gitignored) to store photos on an external disk.
+#
+#   cp docker-compose.override.example.yml docker-compose.override.yml
+#   mkdir -p /mnt/photos/Photos /mnt/photos/thumbnails /mnt/photos/trash
+#   docker compose up -d --build
+#
+# Only override the paths you need. ./data stays in the project folder by default.
+
+services:
+  viewphoto:
+    volumes:
+      - /mnt/photos/Photos:/photos
+      - /mnt/photos/thumbnails:/thumbnails
+      - /mnt/photos/trash:/trash
+      - ./data:/data

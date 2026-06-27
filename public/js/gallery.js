@@ -64,7 +64,7 @@ export function createGallery({
     photos = list;
     galleryEl.innerHTML = "";
 
-    countEl.textContent = `${photos.length} ${photos.length === 1 ? "foto" : "foto"}`;
+    countEl.textContent = `${photos.length} ${photos.length === 1 ? "photo" : "photos"}`;
     selectModeBtn?.classList.toggle("hidden", !photos.length);
 
     if (!photos.length) {
@@ -93,8 +93,8 @@ export function createGallery({
       deleteBtn.type = "button";
       deleteBtn.className = "photo-delete-btn";
       deleteBtn.innerHTML = icons.trash;
-      deleteBtn.title = "Sposta nel cestino";
-      deleteBtn.setAttribute("aria-label", `Elimina ${photo.name}`);
+      deleteBtn.title = "Move to trash";
+      deleteBtn.setAttribute("aria-label", `Delete ${photo.name}`);
       deleteBtn.addEventListener("click", (event) => {
         event.stopPropagation();
         onDeletePhoto(photo, { fromLightbox: false });
@@ -360,16 +360,16 @@ export function bindUpload({
 
   async function processFiles(files) {
     if (!files.length) return;
-    showProgress(true, { percent: 0, text: "Caricamento in corso…" });
+    showProgress(true, { percent: 0, text: "Uploading…" });
 
     try {
       const result = await onUploaded(getCurrentFolder(), files, {
         onProgress: ({ percent, batchIndex, batchCount }) => {
           const batchLabel = batchCount > 1 ? ` — batch ${batchIndex}/${batchCount}` : "";
-          showProgress(true, { percent, text: `Caricamento… ${percent}%${batchLabel}` });
+          showProgress(true, { percent, text: `Uploading… ${percent}%${batchLabel}` });
         }
       });
-      showProgress(true, { percent: 100, text: `${result.count || 0} file caricati` });
+      showProgress(true, { percent: 100, text: `${result.count || 0} files uploaded` });
       setTimeout(() => showProgress(false), 1200);
     } catch (err) {
       showProgress(false);
@@ -425,7 +425,7 @@ export function bindThemeToggle(button) {
   function renderIcon() {
     const isDark = document.documentElement.dataset.theme === "dark";
     button.innerHTML = isDark ? icons.sun : icons.moon;
-    button.setAttribute("aria-label", isDark ? "Passa al tema chiaro" : "Passa al tema scuro");
+    button.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
   }
 
   renderIcon();
@@ -463,7 +463,7 @@ export function bindConfirmDialog({
     if (caseInsensitive) {
       return typed.localeCompare(expected, undefined, { sensitivity: "accent" }) === 0;
     }
-    if (/^ELIMINA \d+$/i.test(expected)) {
+    if (/^DELETE \d+$/i.test(expected)) {
       return typed.replace(/\s+/g, " ").toUpperCase() === expected.toUpperCase();
     }
     return typed === expected;
@@ -474,10 +474,10 @@ export function bindConfirmDialog({
     message,
     expectedValue,
     onConfirm: callback,
-    submitText = "Elimina",
+    submitText = "Delete",
     caseInsensitive: ignoreCase = false,
     skipTyping: noTyping = false,
-    labelText = "Digita il testo sotto per confermare"
+    labelText = "Type the text below to confirm"
   }) {
     expected = expectedValue;
     onConfirm = callback;
@@ -507,9 +507,9 @@ export function bindConfirmDialog({
     if (!expected) return;
     try {
       await navigator.clipboard.writeText(expected);
-      copyBtn.textContent = "Copiato!";
+      copyBtn.textContent = "Copied!";
       setTimeout(() => {
-        copyBtn.textContent = "Copia";
+        copyBtn.textContent = "Copy";
       }, 1200);
     } catch {
       inputEl.value = expected;
@@ -523,7 +523,7 @@ export function bindConfirmDialog({
     event.preventDefault();
     const confirmValue = skipTyping ? expected : inputEl.value.trim();
     if (!skipTyping && expected && !matchesExpected(confirmValue)) {
-      errorEl.textContent = "Il testo non corrisponde.";
+      errorEl.textContent = "Text does not match.";
       errorEl.classList.remove("hidden");
       return;
     }
@@ -649,7 +649,7 @@ export function bindMovePhotoDialog({ dialog, nameEl, listEl, errorEl, cancelBtn
     if (isCurrent) {
       const tag = document.createElement("span");
       tag.className = "move-folder-tag";
-      tag.textContent = "Attuale";
+      tag.textContent = "Current";
       btn.append(tag);
     }
 
@@ -679,9 +679,9 @@ export function bindMovePhotoDialog({ dialog, nameEl, listEl, errorEl, cancelBtn
   async function open(currentPhoto, ids = null) {
     photo = currentPhoto;
     batchIds = ids;
-    titleEl.textContent = ids?.length ? `Sposta ${ids.length} foto` : "Sposta foto";
+    titleEl.textContent = ids?.length ? `Move ${ids.length} photos` : "Move photo";
     nameEl.textContent = ids?.length
-      ? `Stai spostando ${ids.length} foto selezionate`
+      ? `Moving ${ids.length} selected photos`
       : `"${currentPhoto.name}"`;
     errorEl.classList.add("hidden");
     listEl.innerHTML = "";
@@ -690,7 +690,7 @@ export function bindMovePhotoDialog({ dialog, nameEl, listEl, errorEl, cancelBtn
       const data = await folderApi.list();
       const folders = data.folders || [];
 
-      renderOption("", "Tutte le foto", getCurrentFolderPath() === "", 0);
+      renderOption("", "All photos", getCurrentFolderPath() === "", 0);
       const tree = buildFolderTree(folders);
       for (const node of tree) {
         renderMoveNode(node, 0);

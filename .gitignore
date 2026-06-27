@@ -19,6 +19,9 @@ thumbnails/
 .upload-temp/
 data/
 
+# Local Docker overrides (may contain personal paths)
+docker-compose.override.yml
+
 # OS / editor
 .DS_Store
 .cursor/

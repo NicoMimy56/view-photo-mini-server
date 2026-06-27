@@ -43,13 +43,13 @@ export function createMobileBrowse({
     if (currentFolder === "") {
       const intro = document.createElement("p");
       intro.className = "mobile-browse-intro";
-      intro.textContent = "Scegli un album o visualizza l'intera libreria.";
+      intro.textContent = "Choose an album or view the entire library.";
       containerEl.append(intro);
 
       containerEl.append(
         createAlbumCard({
-          title: "Tutte le foto",
-          subtitle: "L'intera libreria",
+          title: "All photos",
+          subtitle: "The entire library",
           coverId: null,
           icon: icons.grid,
           accent: true,
@@ -60,17 +60,17 @@ export function createMobileBrowse({
       const intro = document.createElement("p");
       intro.className = "mobile-browse-intro";
       intro.textContent = children.length
-        ? "Apri una sotto-cartella o le foto di questo album."
+        ? "Open a subfolder or this album's photos."
         : directPhotos
-          ? "Tocca per aprire le foto."
-          : "Questo album è vuoto.";
+          ? "Tap to open photos."
+          : "This album is empty.";
       containerEl.append(intro);
 
       if (directPhotos > 0) {
         containerEl.append(
           createAlbumCard({
-            title: "Foto in questo album",
-            subtitle: `${directPhotos} ${directPhotos === 1 ? "foto" : "foto"}`,
+            title: "Photos in this album",
+            subtitle: `${directPhotos} ${directPhotos === 1 ? "photo" : "photos"}`,
             coverId: covers[currentFolder],
             icon: icons.image,
             accent: true,
@@ -83,7 +83,7 @@ export function createMobileBrowse({
     if (!children.length && currentFolder && directPhotos === 0) {
       const empty = document.createElement("div");
       empty.className = "mobile-browse-empty";
-      empty.innerHTML = `${icons.folder}<p>Nessuna foto qui.<br>Carica dal pulsante in alto.</p>`;
+      empty.innerHTML = `${icons.folder}<p>No photos here.<br>Upload using the button above.</p>`;
       containerEl.append(empty);
       return;
     }
@@ -91,20 +91,20 @@ export function createMobileBrowse({
     if (children.length) {
       const heading = document.createElement("h3");
       heading.className = "mobile-browse-section";
-      heading.textContent = currentFolder === "" ? "I tuoi album" : "Sotto-album";
+      heading.textContent = currentFolder === "" ? "Your albums" : "Sub-albums";
       containerEl.append(heading);
 
       const grid = document.createElement("div");
       grid.className = "mobile-album-grid";
 
-      for (const child of children.sort((a, b) => a.name.localeCompare(b.name, "it"))) {
+      for (const child of children.sort((a, b) => a.name.localeCompare(b.name, "en"))) {
         const hasNested = child.subfolderCount > 0;
         grid.append(
           createAlbumCard({
             title: child.name,
             subtitle: hasNested
-              ? `${child.subfolderCount} cartelle · ${child.photoCount} foto`
-              : `${child.photoCount} ${child.photoCount === 1 ? "foto" : "foto"}`,
+              ? `${child.subfolderCount} folders · ${child.photoCount} photos`
+              : `${child.photoCount} ${child.photoCount === 1 ? "photo" : "photos"}`,
             coverId: covers[child.path],
             icon: hasNested ? icons.folderOpen : icons.folder,
             onClick: () => {

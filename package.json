@@ -15,7 +15,11 @@
     "heic"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/view-photo-mini-server.git"
+  },
   "dependencies": {
     "archiver": "^7.0.1",
     "dotenv": "^17.4.2",

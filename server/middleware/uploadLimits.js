@@ -4,8 +4,7 @@ const multer = require("multer");
 const { MAX_UPLOAD_BYTES, MAX_UPLOAD_FILES, ALLOWED_EXTENSIONS, PHOTOS_DIR } = require("../config");
 const { isAllowedExtension } = require("../paths");
 
-// Temp sullo stesso volume di Photos (SanDisk mount).
-// Evita EXDEV: rename tra filesystem del container e volume esterno fallisce.
+// Temp on the same volume as Photos to avoid EXDEV rename failures across filesystems.
 const UPLOAD_TEMP_DIR = path.join(PHOTOS_DIR, ".upload-temp");
 
 if (!fs.existsSync(UPLOAD_TEMP_DIR)) {
@@ -30,9 +29,9 @@ function createUploadMiddleware() {
 
   function fileFilter(_req, file, cb) {
     if (!isAllowedExtension(file.originalname)) {
-      const ext = path.extname(file.originalname).slice(1).toLowerCase() || "sconosciuto";
+      const ext = path.extname(file.originalname).slice(1).toLowerCase() || "unknown";
       return cb(
-        new Error(`Tipo file non consentito (.${ext}). Consentiti: ${ALLOWED_EXTENSIONS.join(", ")}`)
+        new Error(`File type not allowed (.${ext}). Allowed: ${ALLOWED_EXTENSIONS.join(", ")}`)
       );
     }
     cb(null, true);

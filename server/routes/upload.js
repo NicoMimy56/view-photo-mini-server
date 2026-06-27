@@ -103,7 +103,7 @@ async function processUploadedFiles(req) {
       status: 409,
       body: {
         error: "duplicate_conflict",
-        message: "Alcuni file esistono già in questo album.",
+        message: "Some files already exist in this album.",
         conflicts: conflicts.map((item) => item.name),
         uploaded,
         skipped
@@ -123,10 +123,10 @@ function registerUploadRoutes(app) {
       if (err) {
         const message =
           err.code === "LIMIT_FILE_SIZE"
-            ? "File troppo grande."
+            ? "File too large."
             : err.code === "LIMIT_UNEXPECTED_FILE"
-              ? `Troppi file in un solo caricamento (max ${MAX_UPLOAD_FILES}).`
-              : err.message || "Upload fallito.";
+              ? `Too many files in one upload (max ${MAX_UPLOAD_FILES}).`
+              : err.message || "Upload failed.";
         return res.status(400).json({ error: "upload_failed", message });
       }
 
@@ -137,7 +137,7 @@ function registerUploadRoutes(app) {
         console.error(uploadErr);
         res.status(500).json({
           error: "upload_failed",
-          message: uploadErr.message || "Errore durante il caricamento."
+          message: uploadErr.message || "Upload failed."
         });
       }
     });
@@ -149,8 +149,8 @@ function registerUploadRoutes(app) {
       if (err) {
         const message =
           err.code === "LIMIT_UNEXPECTED_FILE"
-            ? `Troppi file in un solo caricamento (max ${MAX_UPLOAD_FILES}).`
-            : err.message || "Upload fallito.";
+            ? `Too many files in one upload (max ${MAX_UPLOAD_FILES}).`
+            : err.message || "Upload failed.";
         return res.redirect(303, `/?share_error=${encodeURIComponent(message)}`);
       }
       try {
@@ -164,7 +164,7 @@ function registerUploadRoutes(app) {
         console.error(uploadErr);
         return res.redirect(
           303,
-          `/?share_error=${encodeURIComponent(uploadErr.message || "Upload fallito.")}`
+          `/?share_error=${encodeURIComponent(uploadErr.message || "Upload failed.")}`
         );
       }
     });

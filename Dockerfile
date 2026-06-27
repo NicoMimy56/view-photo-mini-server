@@ -1,4 +1,4 @@
-# ViewPhotoMiniServer — Raspberry Pi / CasaOS (arm64 and amd64).
+# ViewPhoto Mini Server — Raspberry Pi / CasaOS (arm64 and amd64).
 # bookworm-slim + libheif for iPhone HEIC via sharp.
 
 FROM node:20-bookworm-slim

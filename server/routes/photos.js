@@ -30,7 +30,7 @@ function getVideoMime(extension) {
 
 function handleStoreError(res, err) {
   if (err.code === "confirmation_mismatch") {
-    return res.status(400).json({ error: err.code, message: "Conferma digitata non corretta." });
+    return res.status(400).json({ error: err.code, message: "Incorrect confirmation text." });
   }
   if (err.code === "not_found") {
     return res.status(404).json({ error: err.code, message: err.message });
@@ -45,13 +45,13 @@ function handleStoreError(res, err) {
     console.error(err);
     return res.status(500).json({
       error: "internal_error",
-      message: "Permesso negato sul disco. Controlla le cartelle Photos e trash sul Pi."
+      message: "Disk permission denied. Check Photos and trash folders on the host."
     });
   }
   console.error(err);
   return res.status(500).json({
     error: "internal_error",
-    message: err.message || "Errore imprevisto del server."
+    message: err.message || "Unexpected server error."
   });
 }
 
@@ -119,10 +119,10 @@ function registerPhotoRoutes(app) {
     try {
       const { ids } = req.body || {};
       if (!Array.isArray(ids) || ids.length === 0) {
-        return res.status(400).json({ error: "invalid_request", message: "Nessuna foto selezionata." });
+        return res.status(400).json({ error: "invalid_request", message: "No photos selected." });
       }
       if (ids.length > 100) {
-        return res.status(400).json({ error: "too_many", message: "Massimo 100 foto per download." });
+        return res.status(400).json({ error: "too_many", message: "Maximum 100 photos per download." });
       }
 
       const archiver = require("archiver");

@@ -10,13 +10,13 @@ function handleStoreError(res, err) {
   if (err.code === "folder_not_empty") {
     return res.status(409).json({
       error: err.code,
-      message: "Elimina prima tutte le foto e le sottocartelle.",
+      message: "Remove all photos and subfolders first.",
       photos: err.details?.photos ?? 0,
       subfolders: err.details?.subfolders ?? 0
     });
   }
   if (err.code === "confirmation_mismatch") {
-    return res.status(400).json({ error: err.code, message: "Conferma digitata non corretta." });
+    return res.status(400).json({ error: err.code, message: "Incorrect confirmation text." });
   }
   if (err.code === "folder_exists") {
     return res.status(409).json({ error: err.code, message: err.message });
@@ -27,7 +27,7 @@ function handleStoreError(res, err) {
   if (err.code === "invalid_folder" || err.code === "invalid_move") {
     return res.status(400).json({
       error: err.code,
-      message: err.message || "Percorso cartella non valido."
+      message: err.message || "Invalid folder path."
     });
   }
   console.error(err);

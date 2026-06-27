@@ -11,7 +11,7 @@ const {
 
 function handleTrashError(res, err) {
   if (err.code === "confirmation_mismatch") {
-    return res.status(400).json({ error: err.code, message: "Conferma digitata non corretta." });
+    return res.status(400).json({ error: err.code, message: "Incorrect confirmation text." });
   }
   if (err.code === "not_found") {
     return res.status(404).json({ error: err.code, message: err.message });
@@ -90,7 +90,7 @@ function registerTrashRoutes(app) {
       const items = await listTrash();
       const item = items.find((entry) => entry.id === req.params.id);
       if (!item) {
-        return res.status(404).json({ error: "not_found", message: "Elemento non trovato nel cestino." });
+        return res.status(404).json({ error: "not_found", message: "Item not found in trash." });
       }
       const { assertTypedConfirmation } = require("../paths");
       assertTypedConfirmation(confirmName, item.name);

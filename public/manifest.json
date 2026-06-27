@@ -1,7 +1,7 @@
 {
   "name": "ViewPhoto",
   "short_name": "ViewPhoto",
-  "description": "Galleria foto personale sul mini server",
+  "description": "Self-hosted photo gallery for your mini server",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f1f3f7",

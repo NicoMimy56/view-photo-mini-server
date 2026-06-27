@@ -18,7 +18,7 @@ export function bindTrashPanel({
 
   function render(items) {
     listEl.innerHTML = "";
-    countEl.textContent = `${items.length} ${items.length === 1 ? "elemento" : "elementi"}`;
+    countEl.textContent = `${items.length} ${items.length === 1 ? "item" : "items"}`;
     emptyEl.classList.toggle("hidden", items.length > 0);
     listEl.classList.toggle("hidden", !items.length);
 
@@ -43,7 +43,7 @@ export function bindTrashPanel({
 
       const info = document.createElement("span");
       info.className = "trash-item-info muted";
-      info.textContent = `${item.daysInTrash} giorni fa · ${formatBytes(item.size)}`;
+      info.textContent = `${item.daysInTrash} days ago · ${formatBytes(item.size)}`;
 
       meta.append(title, path, info);
 
@@ -53,7 +53,7 @@ export function bindTrashPanel({
       const restoreBtn = document.createElement("button");
       restoreBtn.type = "button";
       restoreBtn.className = "btn btn-soft btn-sm";
-      restoreBtn.textContent = "Ripristina";
+      restoreBtn.textContent = "Restore";
       restoreBtn.addEventListener("click", async () => {
         restoreBtn.disabled = true;
         try {
@@ -103,8 +103,8 @@ export function bindPurgeNotificationBanner({
 
     const size = formatBytes(notification.totalSize);
     messageEl.textContent =
-      `${notification.count} elementi nel cestino da oltre ${notification.retentionDays} giorni (${size}). ` +
-      "Controlla prima che il cestino venga svuotato definitivamente.";
+      `${notification.count} items in trash for over ${notification.retentionDays} days (${size}). ` +
+      "Review before trash is permanently emptied.";
     bannerEl.classList.remove("hidden");
   }
 
@@ -135,8 +135,8 @@ export function bindPurgeConfirmDialog({
 }) {
   function open(notification) {
     messageEl.textContent =
-      `Stai per eliminare definitivamente ${notification.count} elementi (${formatBytes(notification.totalSize)}). ` +
-      'Digita SVUOTA CESTINO per confermare.';
+      `You are about to permanently delete ${notification.count} items (${formatBytes(notification.totalSize)}). ` +
+      'Type EMPTY TRASH to confirm.';
     listEl.innerHTML = "";
     for (const item of notification.items.slice(0, 12)) {
       const row = document.createElement("div");
@@ -147,7 +147,7 @@ export function bindPurgeConfirmDialog({
     if (notification.items.length > 12) {
       const more = document.createElement("div");
       more.className = "purge-item muted";
-      more.textContent = `… e altri ${notification.items.length - 12} elementi`;
+      more.textContent = `… and ${notification.items.length - 12} more items`;
       listEl.append(more);
     }
     inputEl.value = "";
@@ -158,7 +158,7 @@ export function bindPurgeConfirmDialog({
   }
 
   inputEl.addEventListener("input", () => {
-    submitBtn.disabled = inputEl.value.trim() !== "SVUOTA CESTINO";
+    submitBtn.disabled = inputEl.value.trim() !== "EMPTY TRASH";
   });
 
   cancelBtn.addEventListener("click", () => dialog.close());

@@ -20,7 +20,7 @@ function loginRateLimit(req, res, next) {
     const retrySec = Math.ceil((bucket.resetAt - now) / 1000);
     return res.status(429).json({
       error: "rate_limited",
-      message: `Troppi tentativi. Riprova tra ${retrySec} secondi.`
+      message: `Too many attempts. Try again in ${retrySec} seconds.`
     });
   }
 

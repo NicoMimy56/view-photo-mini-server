@@ -18,12 +18,12 @@ function normalizeFolderPath(raw) {
   const segments = normalized.split("/");
   for (const segment of segments) {
     if (segment === ".." || segment === ".") {
-      const err = new Error("Percorso cartella non valido.");
+      const err = new Error("Invalid folder path.");
       err.code = "invalid_folder";
       throw err;
     }
     if (!segment.length) {
-      const err = new Error("Percorso cartella non valido.");
+      const err = new Error("Invalid folder path.");
       err.code = "invalid_folder";
       throw err;
     }
@@ -46,7 +46,7 @@ function resolveFolderPath(folderPath) {
   const photosRoot = path.resolve(PHOTOS_DIR);
 
   if (resolved !== photosRoot && !resolved.startsWith(photosRoot + path.sep)) {
-    const err = new Error("Percorso cartella non valido.");
+    const err = new Error("Invalid folder path.");
     err.code = "invalid_folder";
     throw err;
   }

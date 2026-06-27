@@ -319,7 +319,7 @@ async function deletePhotosBatch(photoIds, confirmPhrase) {
     throw err;
   }
 
-  const expected = `ELIMINA ${photoIds.length}`;
+  const expected = `DELETE ${photoIds.length}`;
   assertBatchDeleteConfirmation(confirmPhrase, expected);
 
   const trashed = [];

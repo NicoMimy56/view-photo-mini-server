@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,8 +19,8 @@
     <div id="purge-banner" class="purge-banner hidden">
       <p id="purge-banner-message" class="purge-banner-message"></p>
       <div class="purge-banner-actions">
-        <button type="button" id="purge-review-btn" class="btn btn-primary btn-sm">Controlla cestino</button>
-        <button type="button" id="purge-postpone-btn" class="btn btn-ghost btn-sm">Rimanda 3 giorni</button>
+        <button type="button" id="purge-review-btn" class="btn btn-primary btn-sm">Review trash</button>
+        <button type="button" id="purge-postpone-btn" class="btn btn-ghost btn-sm">Postpone 3 days</button>
       </div>
     </div>
 
@@ -33,13 +33,13 @@
         </div>
       </div>
       <div class="topbar-actions">
-        <button type="button" id="trash-btn" class="btn btn-icon btn-ghost" aria-label="Cestino"></button>
-        <button type="button" id="theme-toggle" class="btn btn-icon btn-ghost" aria-label="Cambia tema"></button>
+        <button type="button" id="trash-btn" class="btn btn-icon btn-ghost" aria-label="Trash"></button>
+        <button type="button" id="theme-toggle" class="btn btn-icon btn-ghost" aria-label="Change theme"></button>
         <button type="button" id="upload-btn" class="btn btn-primary">
           <span class="btn-icon-slot" id="upload-btn-icon"></span>
-          <span class="btn-label-text">Carica foto</span>
+          <span class="btn-label-text">Upload photos</span>
         </button>
-        <button type="button" id="logout-btn" class="btn btn-icon btn-ghost hidden" aria-label="Esci"></button>
+        <button type="button" id="logout-btn" class="btn btn-icon btn-ghost hidden" aria-label="Log out"></button>
       </div>
     </header>
 
@@ -49,7 +49,7 @@
           <h2 class="sidebar-title">Album</h2>
           <button type="button" id="new-folder-btn" class="btn btn-small btn-soft">
             <span class="btn-icon-slot" id="new-folder-icon"></span>
-            Cartella
+            Folder
           </button>
         </div>
         <nav id="folder-list" class="folder-list" aria-label="Album"></nav>
@@ -57,9 +57,9 @@
 
       <main class="main">
         <div class="mobile-nav-bar">
-          <button type="button" id="mobile-back-btn" class="mobile-back-btn hidden" aria-label="Indietro">
+          <button type="button" id="mobile-back-btn" class="mobile-back-btn hidden" aria-label="Back">
             <span id="mobile-back-icon"></span>
-            <span>Indietro</span>
+            <span>Back</span>
           </button>
           <h2 id="mobile-screen-title" class="mobile-screen-title">Album</h2>
         </div>
@@ -70,23 +70,23 @@
         <div class="toolbar-row">
           <label class="search-field">
             <span class="search-icon" id="search-icon"></span>
-            <input type="search" id="search-input" placeholder="Cerca foto per nome…" autocomplete="off">
+            <input type="search" id="search-input" placeholder="Search photos by name…" autocomplete="off">
           </label>
           <div class="toolbar-controls">
             <label class="sort-field">
-              <span class="field-label">Ordina</span>
+              <span class="field-label">Sort by</span>
               <select id="sort-select" class="select-input">
-                <option value="modified">Data modifica</option>
-                <option value="taken">Data scatto</option>
-                <option value="name">Nome</option>
-                <option value="size">Dimensione</option>
+                <option value="modified">Date modified</option>
+                <option value="taken">Date taken</option>
+                <option value="name">Name</option>
+                <option value="size">Size</option>
               </select>
             </label>
             <label class="sort-field">
-              <span class="field-label">Direzione</span>
+              <span class="field-label">Direction</span>
               <select id="order-select" class="select-input">
-                <option value="desc">Discendente</option>
-                <option value="asc">Ascendente</option>
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
               </select>
             </label>
           </div>
@@ -94,12 +94,12 @@
 
         <div class="main-header">
           <div>
-            <p class="eyebrow">Percorso</p>
-            <h1 id="page-title" class="page-title">Tutte le foto</h1>
+            <p class="eyebrow">Path</p>
+            <h1 id="page-title" class="page-title">All photos</h1>
           </div>
           <div class="main-header-actions">
-            <button type="button" id="select-mode-btn" class="btn btn-soft btn-small hidden">Seleziona</button>
-            <p id="photo-count" class="stat-badge">0 foto</p>
+            <button type="button" id="select-mode-btn" class="btn btn-soft btn-small hidden">Select</button>
+            <p id="photo-count" class="stat-badge">0 photos</p>
           </div>
         </div>
 
@@ -107,37 +107,37 @@
           <div class="upload-progress-track">
             <div id="upload-progress-bar" class="upload-progress-bar"></div>
           </div>
-          <p id="upload-progress-text" class="upload-progress-text muted">Caricamento…</p>
+          <p id="upload-progress-text" class="upload-progress-text muted">Uploading…</p>
         </div>
 
         <div id="selection-bar" class="selection-bar hidden">
-          <p id="selection-count" class="selection-count">0 selezionate</p>
+          <p id="selection-count" class="selection-count">0 selected</p>
           <div class="selection-actions">
-            <button type="button" id="select-all-btn" class="btn btn-ghost btn-sm">Tutte</button>
+            <button type="button" id="select-all-btn" class="btn btn-ghost btn-sm">All</button>
             <button type="button" id="move-selected-btn" class="btn btn-soft btn-sm" disabled>
               <span class="btn-icon-slot" id="move-selected-icon"></span>
-              Sposta
+              Move
             </button>
             <button type="button" id="cover-selected-btn" class="btn btn-soft btn-sm hidden" disabled>
-              Copertina
+              Cover
             </button>
             <button type="button" id="download-selected-btn" class="btn btn-primary btn-sm" disabled>
               <span class="btn-icon-slot" id="download-selected-icon"></span>
-              Scarica ZIP
+              Download ZIP
             </button>
             <button type="button" id="delete-selected-btn" class="btn btn-danger btn-sm" disabled>
               <span class="btn-icon-slot" id="delete-selected-icon"></span>
-              Cestino
+              Trash
             </button>
-            <button type="button" id="cancel-selection-btn" class="btn btn-ghost btn-sm">Annulla</button>
+            <button type="button" id="cancel-selection-btn" class="btn btn-ghost btn-sm">Cancel</button>
           </div>
         </div>
 
         <div id="drop-zone" class="drop-zone hidden">
           <div class="drop-zone-inner">
             <span class="drop-zone-icon" id="drop-zone-icon"></span>
-            <p class="drop-zone-title">Trascina le foto qui</p>
-            <p class="drop-zone-hint">JPG, PNG, WebP, HEIC, MP4, MOV — puoi selezionarne quante vuoi</p>
+            <p class="drop-zone-title">Drop photos here</p>
+            <p class="drop-zone-hint">JPG, PNG, WebP, HEIC, MP4, MOV — select as many as you like</p>
           </div>
         </div>
 
@@ -145,9 +145,9 @@
 
         <div id="empty-state" class="empty-state hidden">
           <span class="empty-icon" id="empty-icon"></span>
-          <h2 id="empty-title">Nessuna foto</h2>
-          <p id="empty-message" class="muted">Questo album è vuoto. Carica le tue foto o trascinale nell'area sopra.</p>
-          <button type="button" id="empty-upload-btn" class="btn btn-primary">Carica foto</button>
+          <h2 id="empty-title">No photos</h2>
+          <p id="empty-message" class="muted">This album is empty. Upload your photos or drag them into the area above.</p>
+          <button type="button" id="empty-upload-btn" class="btn btn-primary">Upload photos</button>
         </div>
         </div>
       </main>
@@ -159,11 +159,11 @@
       <div class="login-hero">
         <img class="login-hero-logo" src="/assets/logo.svg" alt="" width="80" height="80">
         <h1>ViewPhoto</h1>
-        <p>Galleria personale sul tuo mini server. Accesso sicuro via Tailscale.</p>
+        <p>Personal gallery on your mini server. Secure access via Tailscale.</p>
       </div>
       <form id="login-form" class="login-card">
-        <h2>Accedi</h2>
-        <p class="muted">Inserisci le credenziali del server</p>
+        <h2>Sign in</h2>
+        <p class="muted">Enter your server credentials</p>
         <label class="field">
           <span class="field-label">Username</span>
           <input type="text" id="login-username" autocomplete="username" required placeholder="admin">
@@ -173,7 +173,7 @@
           <input type="password" id="login-password" autocomplete="current-password" required placeholder="••••••••">
         </label>
         <p id="login-error" class="error hidden"></p>
-        <button type="submit" class="btn btn-primary btn-block">Entra</button>
+        <button type="submit" class="btn btn-primary btn-block">Sign in</button>
       </form>
     </div>
   </div>
@@ -182,29 +182,29 @@
     <div class="lightbox-shell">
       <div class="lightbox-toolbar">
         <div class="lightbox-meta">
-          <p class="lightbox-label">Anteprima · <span id="lightbox-counter"></span></p>
+          <p class="lightbox-label">Preview · <span id="lightbox-counter"></span></p>
           <span id="lightbox-title" class="lightbox-title"></span>
         </div>
         <div class="lightbox-actions">
-          <button type="button" id="lightbox-prev" class="btn btn-icon btn-ghost btn-sm" aria-label="Foto precedente"></button>
-          <button type="button" id="lightbox-next" class="btn btn-icon btn-ghost btn-sm" aria-label="Foto successiva"></button>
+          <button type="button" id="lightbox-prev" class="btn btn-icon btn-ghost btn-sm" aria-label="Previous photo"></button>
+          <button type="button" id="lightbox-next" class="btn btn-icon btn-ghost btn-sm" aria-label="Next photo"></button>
           <button type="button" id="lightbox-rename" class="btn btn-ghost btn-sm">
             <span class="btn-icon-slot" id="lightbox-rename-icon"></span>
-            Rinomina
+            Rename
           </button>
           <button type="button" id="lightbox-move" class="btn btn-ghost btn-sm">
             <span class="btn-icon-slot" id="lightbox-move-icon"></span>
-            Sposta
+            Move
           </button>
           <a id="lightbox-download" class="btn btn-ghost btn-sm" href="#" download>
             <span class="btn-icon-slot" id="lightbox-download-icon"></span>
-            Scarica
+            Download
           </a>
           <button type="button" id="lightbox-delete" class="btn btn-danger-soft btn-sm">
             <span class="btn-icon-slot" id="lightbox-delete-icon"></span>
-            Cestino
+            Trash
           </button>
-          <button type="button" id="lightbox-close" class="btn btn-icon btn-ghost btn-sm" aria-label="Chiudi"></button>
+          <button type="button" id="lightbox-close" class="btn btn-icon btn-ghost btn-sm" aria-label="Close"></button>
         </div>
       </div>
       <div class="lightbox-stage">
@@ -219,17 +219,17 @@
       <h2 id="confirm-title"></h2>
       <p id="confirm-message" class="muted"></p>
       <label id="confirm-label" class="field">
-        <span class="field-label" id="confirm-label-text">Digita il nome file per confermare</span>
+        <span class="field-label" id="confirm-label-text">Type the file name to confirm</span>
         <div class="confirm-expected-row">
           <strong id="confirm-expected" class="confirm-expected-name"></strong>
-          <button type="button" id="confirm-copy" class="btn btn-ghost btn-sm">Copia</button>
+          <button type="button" id="confirm-copy" class="btn btn-ghost btn-sm">Copy</button>
         </div>
         <input type="text" id="confirm-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
       </label>
       <p id="confirm-error" class="error hidden"></p>
       <div class="dialog-actions">
-        <button type="button" id="confirm-cancel" class="btn btn-ghost">Annulla</button>
-        <button type="submit" id="confirm-submit" class="btn btn-danger" disabled>Conferma</button>
+        <button type="button" id="confirm-cancel" class="btn btn-ghost">Cancel</button>
+        <button type="submit" id="confirm-submit" class="btn btn-danger" disabled>Confirm</button>
       </div>
     </form>
   </dialog>
@@ -239,7 +239,7 @@
       <h2 id="info-title"></h2>
       <p id="info-message" class="muted"></p>
       <div class="dialog-actions dialog-actions-end">
-        <button type="button" id="info-ok" class="btn btn-primary">Ho capito</button>
+        <button type="button" id="info-ok" class="btn btn-primary">Got it</button>
       </div>
     </div>
   </dialog>
@@ -250,67 +250,67 @@
       <p id="choice-message" class="muted"></p>
       <div id="choice-actions" class="choice-actions"></div>
       <div class="dialog-actions dialog-actions-end">
-        <button type="button" id="choice-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="button" id="choice-cancel" class="btn btn-ghost">Cancel</button>
       </div>
     </div>
   </dialog>
 
   <dialog id="folder-dialog" class="modal">
     <form method="dialog" id="folder-form" class="modal-panel">
-      <h2>Nuovo album</h2>
-      <p class="muted">Crea una cartella o un percorso annidato, ad esempio <code>Vacanze/2025</code>.</p>
+      <h2>New album</h2>
+      <p class="muted">Create a folder or nested path, for example <code>Vacation/2025</code>.</p>
       <label class="field">
-        <span class="field-label">Percorso</span>
-        <input type="text" id="folder-input" autocomplete="off" placeholder="Vacanze/2025" required>
+        <span class="field-label">Path</span>
+        <input type="text" id="folder-input" autocomplete="off" placeholder="Vacation/2025" required>
       </label>
       <p id="folder-error" class="error hidden"></p>
       <div class="dialog-actions">
-        <button type="button" id="folder-cancel" class="btn btn-ghost">Annulla</button>
-        <button type="submit" id="folder-submit" class="btn btn-primary">Crea album</button>
+        <button type="button" id="folder-cancel" class="btn btn-ghost">Cancel</button>
+        <button type="submit" id="folder-submit" class="btn btn-primary">Create album</button>
       </div>
     </form>
   </dialog>
 
   <dialog id="rename-folder-dialog" class="modal">
     <form method="dialog" id="rename-folder-form" class="modal-panel">
-      <h2>Rinomina album</h2>
+      <h2>Rename album</h2>
       <label class="field">
-        <span class="field-label">Nuovo nome</span>
+        <span class="field-label">New name</span>
         <input type="text" id="rename-folder-input" autocomplete="off" required>
       </label>
       <p id="rename-folder-error" class="error hidden"></p>
       <div class="dialog-actions">
-        <button type="button" id="rename-folder-cancel" class="btn btn-ghost">Annulla</button>
-        <button type="submit" class="btn btn-primary">Salva</button>
+        <button type="button" id="rename-folder-cancel" class="btn btn-ghost">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
       </div>
     </form>
   </dialog>
 
   <dialog id="rename-photo-dialog" class="modal">
     <form method="dialog" id="rename-photo-form" class="modal-panel">
-      <h2 id="rename-photo-title">Rinomina foto</h2>
+      <h2 id="rename-photo-title">Rename photo</h2>
       <p id="rename-photo-hint" class="muted"></p>
       <label class="field">
-        <span class="field-label">Nuovo nome file</span>
+        <span class="field-label">New file name</span>
         <input type="text" id="rename-photo-input" autocomplete="off" required>
       </label>
       <p id="rename-photo-error" class="error hidden"></p>
       <div class="dialog-actions">
-        <button type="button" id="rename-photo-cancel" class="btn btn-ghost">Annulla</button>
-        <button type="submit" class="btn btn-primary">Salva</button>
+        <button type="button" id="rename-photo-cancel" class="btn btn-ghost">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
       </div>
     </form>
   </dialog>
 
   <dialog id="move-dialog" class="modal">
     <div class="modal-panel">
-      <h2 id="move-dialog-title">Sposta foto</h2>
+      <h2 id="move-dialog-title">Move photo</h2>
       <p id="move-photo-name" class="muted"></p>
-      <p class="field-label">Scegli album di destinazione</p>
-      <div id="move-folder-list" class="move-folder-list" role="listbox" aria-label="Album disponibili"></div>
+      <p class="field-label">Choose destination album</p>
+      <div id="move-folder-list" class="move-folder-list" role="listbox" aria-label="Available albums"></div>
       <p id="move-error" class="error hidden"></p>
       <div class="dialog-actions">
-        <button type="button" id="move-cancel" class="btn btn-ghost">Annulla</button>
+        <button type="button" id="move-cancel" class="btn btn-ghost">Cancel</button>
       </div>
     </div>
   </dialog>
@@ -319,36 +319,36 @@
     <div class="modal-panel">
       <div class="dialog-header-row">
         <div>
-          <h2>Cestino</h2>
-          <p id="trash-count" class="muted">0 elementi</p>
+          <h2>Trash</h2>
+          <p id="trash-count" class="muted">0 items</p>
         </div>
-        <button type="button" id="trash-empty-btn" class="btn btn-danger-soft btn-sm">Svuota tutto</button>
+        <button type="button" id="trash-empty-btn" class="btn btn-danger-soft btn-sm">Empty all</button>
       </div>
-      <p class="muted">Gli elementi eliminati restano qui per 7 giorni, poi ti chiederò conferma prima di liberare spazio.</p>
+      <p class="muted">Deleted items stay here for 7 days, then you'll be asked to confirm before freeing space.</p>
       <div id="trash-empty-state" class="empty-state compact hidden">
-        <h2>Cestino vuoto</h2>
-        <p class="muted">Le foto eliminate compariranno qui e potrai ripristinarle.</p>
+        <h2>Trash is empty</h2>
+        <p class="muted">Deleted photos will appear here and can be restored.</p>
       </div>
       <div id="trash-list" class="trash-list"></div>
       <div class="dialog-actions dialog-actions-end">
-        <button type="button" id="trash-close-btn" class="btn btn-primary">Chiudi</button>
+        <button type="button" id="trash-close-btn" class="btn btn-primary">Close</button>
       </div>
     </div>
   </dialog>
 
   <dialog id="purge-dialog" class="modal">
     <form method="dialog" id="purge-form" class="modal-panel">
-      <h2>Svuota cestino scaduto</h2>
+      <h2>Empty expired trash</h2>
       <p id="purge-message" class="muted"></p>
       <div id="purge-list" class="purge-list"></div>
       <label class="field">
-        <span class="field-label">Digita <strong>SVUOTA CESTINO</strong> per eliminare definitivamente</span>
+        <span class="field-label">Type <strong>EMPTY TRASH</strong> to permanently delete</span>
         <input type="text" id="purge-input" autocomplete="off">
       </label>
       <p id="purge-error" class="error hidden"></p>
       <div class="dialog-actions">
-        <button type="button" id="purge-cancel" class="btn btn-ghost">Annulla</button>
-        <button type="submit" id="purge-submit" class="btn btn-danger" disabled>Elimina definitivamente</button>
+        <button type="button" id="purge-cancel" class="btn btn-ghost">Cancel</button>
+        <button type="submit" id="purge-submit" class="btn btn-danger" disabled>Delete permanently</button>
       </div>
     </form>
   </dialog>

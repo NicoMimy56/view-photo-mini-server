@@ -246,7 +246,7 @@ async function getPurgeNotification() {
 
 async function confirmPurge(confirmPhrase) {
   const { assertTypedConfirmation } = require("../paths");
-  assertTypedConfirmation(confirmPhrase, "SVUOTA CESTINO");
+  assertTypedConfirmation(confirmPhrase, "EMPTY TRASH");
 
   const manifest = await readManifest();
   const toDelete = manifest.items.filter((item) => item.purgePending);
@@ -280,7 +280,7 @@ async function postponePurge() {
 
 async function emptyAllTrash(confirmPhrase) {
   const { assertTypedConfirmation } = require("../paths");
-  assertTypedConfirmation(confirmPhrase, "SVUOTA TUTTO");
+  assertTypedConfirmation(confirmPhrase, "EMPTY ALL");
 
   const manifest = await readManifest();
   for (const item of manifest.items) {

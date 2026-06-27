@@ -1,28 +1,29 @@
-# CasaOS / Raspberry Pi — avvio: docker compose up -d --build
-# Porta 3001 per non confliggere con UniStrategy (:3000).
+# ViewPhoto Mini Server — Docker Compose
+# Start: docker compose up -d --build
+# Default port 3001 (change in .env if needed).
 #
-# Storage su SanDisk: crea le cartelle sul Pi prima del primo avvio:
-#   sudo mkdir -p /mnt/FotoSanDisk/Photos /mnt/FotoSanDisk/thumbnails /mnt/FotoSanDisk/trash
+# First-time setup: bash scripts/setup-server.sh
+# External disk:   cp docker-compose.override.example.yml docker-compose.override.yml
 
 services:
   viewphoto:
     build: .
-    container_name: ViewPhotoApp
+    container_name: viewphoto
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "${PORT:-3001}:3001"
     env_file:
       - .env
     environment:
-      TZ: Europe/Rome
+      TZ: ${TZ:-UTC}
       PHOTOS_DIR: /photos
       THUMBNAILS_DIR: /thumbnails
       TRASH_DIR: /trash
       DATA_DIR: /data
     volumes:
-      - /mnt/FotoSanDisk/Photos:/photos
-      - /mnt/FotoSanDisk/thumbnails:/thumbnails
-      - /mnt/FotoSanDisk/trash:/trash
+      - ./Photos:/photos
+      - ./thumbnails:/thumbnails
+      - ./.trash:/trash
       - ./data:/data
     healthcheck:
       test:

@@ -103,19 +103,19 @@ function getCurrentFolder() {
 function updatePageTitle(folder) {
   pageTitleEl.innerHTML = "";
   if (!folder) {
-    pageTitleEl.textContent = isMobileLayout() && !mobilePhotoView ? "Album" : "Tutte le foto";
+    pageTitleEl.textContent = isMobileLayout() && !mobilePhotoView ? "Album" : "All photos";
     return;
   }
 
   const parts = splitFolderPath(folder);
   const nav = document.createElement("nav");
   nav.className = "breadcrumb";
-  nav.setAttribute("aria-label", "Percorso album");
+  nav.setAttribute("aria-label", "Album path");
 
   const rootBtn = document.createElement("button");
   rootBtn.type = "button";
   rootBtn.className = "breadcrumb-link";
-  rootBtn.textContent = "Tutte le foto";
+  rootBtn.textContent = "All photos";
   rootBtn.addEventListener("click", () => selectFolder(""));
   nav.append(rootBtn);
 
@@ -262,28 +262,28 @@ const purgeConfirmDialog = bindPurgeConfirmDialog({
     await trashPanel.refresh();
     await refreshAll();
     infoDialog.open({
-      title: "Spazio liberato",
-      message: "Gli elementi scaduti sono stati eliminati definitivamente dal cestino."
+      title: "Space freed",
+      message: "Expired items have been permanently deleted from trash."
     });
   }
 });
 
 function requestDeletePhoto(photo, { fromLightbox = false } = {}) {
   confirmDialog.open({
-    title: "Sposta nel cestino",
-    message: `La foto "${photo.name}" verrà spostata nel cestino. Potrai ripristinarla entro 7 giorni.`,
+    title: "Move to trash",
+    message: `The photo "${photo.name}" will be moved to trash. You can restore it within 7 days.`,
     expectedValue: photo.name,
-    submitText: "Sposta nel cestino",
+    submitText: "Move to trash",
     caseInsensitive: true,
-    labelText: "Digita il nome del file (puoi usare Copia)",
+    labelText: "Type the file name (you can use Copy)",
     onConfirm: async (confirmName) => {
       await photoApi.remove(photo.id, confirmName);
       if (fromLightbox) lightbox.close();
       gallery.clearSelection();
       await refreshAll();
       infoDialog.open({
-        title: "Spostata nel cestino",
-        message: `"${photo.name}" è nel cestino. Apri il cestino per ripristinarla.`
+        title: "Moved to trash",
+        message: `"${photo.name}" is in trash. Open trash to restore it.`
       });
     }
   });
@@ -294,23 +294,23 @@ function requestDeleteSelected() {
   if (!ids.length) return;
 
   const selected = gallery.getPhotos().filter((photo) => ids.includes(photo.id));
-  const expected = `ELIMINA ${ids.length}`;
+  const expected = `DELETE ${ids.length}`;
   const preview = selected.slice(0, 6).map((photo) => photo.name).join(", ");
-  const suffix = selected.length > 6 ? ` … (+${selected.length - 6} altre)` : "";
+  const suffix = selected.length > 6 ? ` … (+${selected.length - 6} more)` : "";
 
   confirmDialog.open({
-    title: "Sposta nel cestino",
-    message: `${ids.length} foto selezionate andranno nel cestino. Potrai ripristinarle entro 7 giorni.${preview ? ` (${preview}${suffix})` : ""}`,
+    title: "Move to trash",
+    message: `${ids.length} selected photos will go to trash. You can restore them within 7 days.${preview ? ` (${preview}${suffix})` : ""}`,
     expectedValue: expected,
-    submitText: `Sposta ${ids.length} foto nel cestino`,
+    submitText: `Move ${ids.length} photos to trash`,
     skipTyping: true,
     onConfirm: async (confirmPhrase) => {
       await photoApi.removeBatch(ids, confirmPhrase);
       gallery.setSelectionMode(false);
       await refreshAll();
       infoDialog.open({
-        title: "Spostate nel cestino",
-        message: `${ids.length} foto spostate nel cestino.`
+        title: "Moved to trash",
+        message: `${ids.length} photos moved to trash.`
       });
     }
   });
@@ -318,23 +318,23 @@ function requestDeleteSelected() {
 
 function requestEmptyTrash() {
   confirmDialog.open({
-    title: "Svuota cestino",
-    message: "Tutti gli elementi nel cestino verranno eliminati definitivamente.",
-    expectedValue: "SVUOTA TUTTO",
-    submitText: "Svuota tutto",
+    title: "Empty trash",
+    message: "All items in trash will be permanently deleted.",
+    expectedValue: "EMPTY ALL",
+    submitText: "Empty all",
     onConfirm: async (confirmPhrase) => {
       await trashApi.empty(confirmPhrase);
       await trashPanel.refresh();
       await checkPurgeNotification();
-      infoDialog.open({ title: "Cestino svuotato", message: "Tutti gli elementi sono stati eliminati definitivamente." });
+      infoDialog.open({ title: "Trash emptied", message: "All items have been permanently deleted." });
     }
   });
 }
 
 function requestRenamePhoto(photo) {
   renamePhotoDialog.open({
-    title: "Rinomina foto",
-    hint: `Conferma digitando il nome attuale: ${photo.name}`,
+    title: "Rename photo",
+    hint: `Confirm by typing the current name: ${photo.name}`,
     value: photo.name,
     onConfirm: async (newName) => {
       if (newName === photo.name) return;
@@ -347,12 +347,12 @@ function requestRenamePhoto(photo) {
 
 function updateSelectionBar({ count, selectionMode, hasPhotos, singleSelected }) {
   selectionBar.classList.toggle("hidden", !selectionMode);
-  selectModeBtn.textContent = selectionMode ? "Esci selezione" : "Seleziona";
+  selectModeBtn.textContent = selectionMode ? "Exit selection" : "Select";
   selectModeBtn.classList.toggle("btn-primary", selectionMode);
   selectModeBtn.classList.toggle("btn-soft", !selectionMode);
   selectModeBtn.classList.toggle("hidden", !hasPhotos && !gallery.getSearchQuery());
 
-  selectionCountEl.textContent = count === 1 ? "1 selezionata" : `${count} selezionate`;
+  selectionCountEl.textContent = count === 1 ? "1 selected" : `${count} selected`;
   moveSelectedBtn.disabled = count === 0;
   downloadSelectedBtn.disabled = count === 0;
   deleteSelectedBtn.disabled = count === 0;
@@ -374,12 +374,12 @@ const movePhotoDialog = bindMovePhotoDialog({
     gallery.setSelectionMode(false);
     await refreshAll();
     infoDialog.open({
-      title: batchIds?.length ? "Foto spostate" : "Foto spostata",
+      title: batchIds?.length ? "Photos moved" : "Photo moved",
       message: batchIds?.length
-        ? `${batchIds.length} foto spostate${targetFolder ? ` in "${targetFolder}"` : " nella radice"}.`
+        ? `${batchIds.length} photos moved${targetFolder ? ` to "${targetFolder}"` : " to root"}.`
         : targetFolder
-          ? `La foto è stata spostata in "${targetFolder}".`
-          : "La foto è stata spostata nella radice."
+          ? `The photo was moved to "${targetFolder}".`
+          : "The photo was moved to root."
     });
   }
 });
@@ -487,7 +487,7 @@ function updateMobileNav() {
   mobileBackBtn.setAttribute("aria-hidden", showBack ? "false" : "true");
 
   if (currentFolder === "") {
-    mobileScreenTitleEl.textContent = mobilePhotoView ? "Tutte le foto" : "Album";
+    mobileScreenTitleEl.textContent = mobilePhotoView ? "All photos" : "Album";
     return;
   }
 
@@ -565,12 +565,12 @@ async function loadGalleryView() {
   }
 
   const q = searchInput.value.trim();
-  emptyTitleEl.textContent = q ? "Nessun risultato" : "Nessuna foto";
+  emptyTitleEl.textContent = q ? "No results" : "No photos";
   emptyMessageEl.textContent = q
-    ? `Nessuna foto corrisponde a "${q}".`
+    ? `No photos match "${q}".`
     : currentFolder
-      ? "Questo album è vuoto. Carica le tue foto o trascinale nell'area sopra."
-      : "Nessuna foto nella libreria. Carica le tue foto per iniziare.";
+      ? "This album is empty. Upload your photos or drag them into the area above."
+      : "No photos in the library. Upload your photos to get started.";
 
   await gallery.load(currentFolder, {
     q,
@@ -609,15 +609,15 @@ function handleShareQueryParams() {
 
   if (uploaded != null) {
     infoDialog.open({
-      title: "Foto condivise",
-      message: `${uploaded} file caricati dalla condivisione.`
+      title: "Shared photos",
+      message: `${uploaded} files uploaded from share.`
     });
   } else {
     const message =
       shareError === "duplicate"
-        ? "Alcuni file condivisi esistono già nella galleria."
+        ? "Some shared files already exist in the gallery."
         : shareError;
-    infoDialog.open({ title: "Condivisione non riuscita", message });
+    infoDialog.open({ title: "Share failed", message });
   }
 
   params.delete("uploaded");
@@ -637,11 +637,11 @@ async function handleDuplicateConflict(data, files) {
   const names = data.conflicts.join(", ");
   return new Promise((resolve) => {
     choiceDialog.open({
-      title: "File già presenti",
-      message: `Questi file esistono già: ${names}. Come vuoi procedere?`,
+      title: "Files already exist",
+      message: `These files already exist: ${names}. How would you like to proceed?`,
       choices: [
         {
-          label: "Rinomina automaticamente",
+          label: "Rename automatically",
           variant: "btn-primary",
           onClick: async () => {
             await handleUpload(getCurrentFolder(), pendingFilesForRetry, { duplicate: "rename" });
@@ -651,7 +651,7 @@ async function handleDuplicateConflict(data, files) {
           }
         },
         {
-          label: "Salta duplicati",
+          label: "Skip duplicates",
           variant: "btn-soft",
           onClick: async () => {
             await handleUpload(getCurrentFolder(), pendingFilesForRetry, { duplicate: "skip" });
@@ -661,7 +661,7 @@ async function handleDuplicateConflict(data, files) {
           }
         },
         {
-          label: "Sostituisci",
+          label: "Replace",
           variant: "btn-danger-soft",
           onClick: async () => {
             await handleUpload(getCurrentFolder(), pendingFilesForRetry, { duplicate: "replace" });
@@ -680,23 +680,23 @@ async function requestDeleteFolder(folder) {
   try {
     inspect = await folderApi.inspect(folder.path);
   } catch (err) {
-    infoDialog.open({ title: "Errore", message: err.message });
+    infoDialog.open({ title: "Error", message: err.message });
     return;
   }
 
   if (!inspect.canDelete) {
     infoDialog.open({
-      title: "Impossibile eliminare l'album",
-      message: `"${folder.name}" contiene ${inspect.photos} foto e ${inspect.subfolders} sotto-album. Svuota l'album prima di spostarlo nel cestino.`
+      title: "Cannot delete album",
+      message: `"${folder.name}" contains ${inspect.photos} photos and ${inspect.subfolders} sub-albums. Empty the album before moving it to trash.`
     });
     return;
   }
 
   confirmDialog.open({
-    title: "Sposta album nel cestino",
-    message: `L'album "${folder.name}" verrà spostato nel cestino.`,
+    title: "Move album to trash",
+    message: `The album "${folder.name}" will be moved to trash.`,
     expectedValue: folder.path,
-    submitText: "Sposta nel cestino",
+    submitText: "Move to trash",
     onConfirm: async (confirmPath) => {
       await folderApi.remove(folder.path, confirmPath);
       if (currentFolder === folder.path || currentFolder.startsWith(`${folder.path}/`)) {
@@ -768,7 +768,7 @@ coverSelectedBtn.addEventListener("click", async () => {
   if (!photo || !currentFolder) return;
   await folderApi.setCover(currentFolder, photo.id);
   await folderManager.refresh();
-  infoDialog.open({ title: "Copertina impostata", message: `"${photo.name}" è ora la copertina dell'album.` });
+  infoDialog.open({ title: "Cover set", message: `"${photo.name}" is now the album cover.` });
 });
 
 downloadSelectedBtn.addEventListener("click", async () => {
@@ -777,9 +777,9 @@ downloadSelectedBtn.addEventListener("click", async () => {
   downloadSelectedBtn.disabled = true;
   try {
     await downloadZip(ids);
-    infoDialog.open({ title: "Download avviato", message: `Sto scaricando ${ids.length} foto in un file ZIP.` });
+    infoDialog.open({ title: "Download started", message: `Downloading ${ids.length} photos in a ZIP file.` });
   } catch (err) {
-    infoDialog.open({ title: "Errore download", message: err.message });
+    infoDialog.open({ title: "Download error", message: err.message });
   } finally {
     downloadSelectedBtn.disabled = gallery.getSelectedIds().length === 0;
   }
