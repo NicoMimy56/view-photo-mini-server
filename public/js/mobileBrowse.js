@@ -21,6 +21,13 @@ function getParentPath(folderPath) {
   return slash === -1 ? "" : folderPath.slice(0, slash);
 }
 
+function resolvePreviewIds(previewIds, coverId) {
+  const ids = Array.isArray(previewIds) ? previewIds.filter(Boolean) : [];
+  if (ids.length) return ids;
+  if (coverId) return [coverId];
+  return [];
+}
+
 export function createMobileBrowse({
   containerEl,
   getCurrentFolder,
@@ -38,6 +45,10 @@ export function createMobileBrowse({
     const currentMeta = currentFolder ? getFolderMeta(currentFolder, folders) : null;
     const directPhotos = currentMeta?.photoCount || 0;
 
+    const rootPreviews = currentFolder === ""
+      ? children.flatMap((child) => child.previewIds || []).slice(0, 4)
+      : [];
+
     containerEl.innerHTML = "";
 
     if (currentFolder === "") {
@@ -50,7 +61,7 @@ export function createMobileBrowse({
         createAlbumCard({
           title: "All photos",
           subtitle: "The entire library",
-          coverId: null,
+          previewIds: rootPreviews,
           icon: icons.grid,
           accent: true,
           onClick: () => onOpenAllPhotos()
@@ -71,7 +82,7 @@ export function createMobileBrowse({
           createAlbumCard({
             title: "Photos in this album",
             subtitle: `${directPhotos} ${directPhotos === 1 ? "photo" : "photos"}`,
-            coverId: covers[currentFolder],
+            previewIds: resolvePreviewIds(currentMeta?.previewIds, covers[currentFolder]),
             icon: icons.image,
             accent: true,
             onClick: () => onOpenPhotos(currentFolder)
@@ -105,7 +116,7 @@ export function createMobileBrowse({
             subtitle: hasNested
               ? `${child.subfolderCount} folders · ${child.photoCount} photos`
               : `${child.photoCount} ${child.photoCount === 1 ? "photo" : "photos"}`,
-            coverId: covers[child.path],
+            previewIds: resolvePreviewIds(child.previewIds, covers[child.path]),
             icon: hasNested ? icons.folderOpen : icons.folder,
             onClick: () => {
               if (child.subfolderCount > 0 && child.photoCount === 0) {
@@ -129,19 +140,25 @@ export function createMobileBrowse({
   return { render };
 }
 
-function createAlbumCard({ title, subtitle, coverId, icon, accent = false, onClick }) {
+function createAlbumCard({ title, subtitle, previewIds = [], icon, accent = false, onClick }) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = `mobile-album-card${accent ? " mobile-album-card-accent" : ""}`;
 
   const cover = document.createElement("div");
   cover.className = "mobile-album-cover";
-  if (coverId) {
-    const img = document.createElement("img");
-    img.src = thumbUrl(coverId);
-    img.alt = "";
-    img.loading = "lazy";
-    cover.append(img);
+
+  const ids = previewIds.filter(Boolean);
+  if (ids.length) {
+    cover.classList.add("mobile-album-cover-mosaic");
+    cover.dataset.count = String(Math.min(ids.length, 4));
+    for (const id of ids.slice(0, 4)) {
+      const img = document.createElement("img");
+      img.src = thumbUrl(id);
+      img.alt = "";
+      img.loading = "lazy";
+      cover.append(img);
+    }
   } else {
     cover.innerHTML = icon;
   }

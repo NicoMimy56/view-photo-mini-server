@@ -5,20 +5,31 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "verify": "bash scripts/verify-project.sh"
   },
   "keywords": [
     "photos",
     "gallery",
     "self-hosted",
     "tailscale",
-    "heic"
+    "heic",
+    "raspberry-pi",
+    "docker",
+    "pwa"
   ],
-  "author": "",
+  "author": "NicoMimy56",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/view-photo-mini-server.git"
+    "url": "https://github.com/NicoMimy56/view-photo-mini-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NicoMimy56/view-photo-mini-server/issues"
+  },
+  "homepage": "https://github.com/NicoMimy56/view-photo-mini-server#readme",
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "archiver": "^7.0.1",

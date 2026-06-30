@@ -1,9 +1,10 @@
-# ViewPhoto Mini Server — Docker Compose
-# Start: docker compose up -d --build
-# Default port 3001 (change in .env if needed).
+# ViewPhoto Mini Server — Docker Compose (default)
 #
-# First-time setup: bash scripts/setup-server.sh
-# External disk:   cp docker-compose.override.example.yml docker-compose.override.yml
+# Start:  docker compose up -d --build
+# Setup:  bash scripts/setup-server.sh
+#
+# Default storage: ./Photos next to this project.
+# External USB/NAS: cp docker-compose.override.example.yml docker-compose.override.yml
 
 services:
   viewphoto:
@@ -36,4 +37,4 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 20s
+      start_period: 30s

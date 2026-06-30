@@ -4,43 +4,65 @@ Complete guide for ViewPhoto Mini Server with Docker, Tailscale, and persistent 
 
 ## Requirements
 
-- Raspberry Pi (or any Linux host) with [CasaOS](https://www.casaos.io/) and Docker
+- Raspberry Pi (or Linux host) with [CasaOS](https://www.casaos.io/) and Docker
 - [Tailscale](https://tailscale.com) on the Pi and your phone (same account)
-- Port **3001** available on the host
-- Recommended: USB drive or NAS mounted at a stable path (e.g. `/mnt/storage/ViewPhoto`)
+- Port **3001** available
+- Optional: USB drive or NAS for photo storage
 
-## 1. Clone the project
+## 1. Get the project on the Pi
+
+**Option A — deploy from your computer:**
 
 ```bash
-cd /mnt/storage
-git clone https://github.com/YOUR_USERNAME/view-photo-mini-server.git ViewPhoto
-cd ViewPhoto
+cp scripts/deploy.env.example scripts/deploy.env
+nano scripts/deploy.env   # set PI_USER, PI_HOST, PI_PATH
+
+bash scripts/deploy-to-pi.sh
 ```
 
-Or copy the folder from your Mac with `rsync`:
+**Option B — clone on the Pi:**
 
 ```bash
-rsync -av --exclude node_modules --exclude .env --exclude Photos \
-  ./ViewPhotoMiniServer/ pi@100.x.y.z:/mnt/storage/ViewPhoto/
+git clone https://github.com/NicoMimy56/view-photo-mini-server.git
+cd view-photo-mini-server
 ```
 
-## 2. First-time setup (automated)
+**Option C — manual rsync:**
 
 ```bash
-cd /mnt/storage/ViewPhoto
+rsync -avz --delete \
+  --exclude node_modules --exclude .env --exclude Photos \
+  --exclude thumbnails --exclude .trash --exclude data \
+  ./ user@100.x.y.z:/home/user/view-photo-mini-server/
+```
+
+## 2. First-time setup
+
+```bash
+cd /path/to/view-photo-mini-server
 bash scripts/setup-server.sh
 ```
 
 The script will:
 
-1. Create data directories (`Photos`, `thumbnails`, `.trash`, `data`)
-2. Copy `.env.example` → `.env` if missing
-3. Validate that `AUTH_PASSWORD` is set
+1. Verify all source files (including `server/routes/`)
+2. Create `./Photos`, `thumbnails`, `.trash`, `data`
+3. Copy `.env.example` → `.env` if missing
 4. Build and start the Docker container
+
+If files belong to `root`:
+
+```bash
+sudo bash scripts/fix-pi-permissions.sh
+```
 
 ## 3. Configure `.env`
 
-Edit `.env` and set at minimum:
+```bash
+nano .env
+```
+
+Minimum settings:
 
 ```env
 APP_BASE_URL=http://100.x.y.z:3001
@@ -56,7 +78,35 @@ Restart after changes:
 docker compose up -d --build
 ```
 
-## 4. Access from your phone
+## 4. External storage (USB / NAS)
+
+By default photos are stored in `./Photos`. For a USB drive:
+
+```bash
+cp docker-compose.override.example.yml docker-compose.override.yml
+nano docker-compose.override.yml   # set your mount paths
+```
+
+Create host folders:
+
+```bash
+sudo mkdir -p /mnt/usb/Photos /mnt/usb/thumbnails /mnt/usb/trash
+sudo chown -R "$USER:$USER" /mnt/usb
+```
+
+Optional — add to `scripts/deploy.env` on your computer:
+
+```env
+PHOTOS_MOUNT=/mnt/usb
+```
+
+Then rebuild:
+
+```bash
+docker compose up -d --build
+```
+
+## 5. Access from your phone
 
 1. Enable Tailscale on your iPhone
 2. Safari → `http://100.x.y.z:3001`
@@ -67,71 +117,42 @@ docker compose up -d --build
 
 ## Persistent volumes
 
-| Host folder | Container path | Content |
-|-------------|----------------|---------|
+| Host folder (default) | Container | Content |
+|-----------------------|-----------|---------|
 | `./Photos` | `/photos` | Original photos and videos |
 | `./thumbnails` | `/thumbnails` | JPEG thumbnails |
 | `./.trash` | `/trash` | Trash (7-day restore window) |
 | `./data` | `/data` | Album covers, EXIF metadata |
 
+With `docker-compose.override.yml`, replace `./Photos` etc. with your USB mount paths.
+
 **Never delete these folders** — they contain all your data.
-
-### Using an external disk
-
-If you want photos on a USB drive instead of the project folder:
-
-```bash
-cp docker-compose.override.example.yml docker-compose.override.yml
-nano docker-compose.override.yml   # set your mount paths
-docker compose up -d --build
-```
-
-Create host directories first:
-
-```bash
-sudo mkdir -p /mnt/photos/Photos /mnt/photos/thumbnails /mnt/photos/trash
-sudo chown -R "$USER:$USER" /mnt/photos
-```
 
 ---
 
 ## Useful commands
 
 ```bash
-# Container status
 docker compose ps
-
-# Live logs
 docker compose logs -f viewphoto
-
-# Health check
-curl -s http://localhost:3001/api/health | jq
-
-# Stop
+curl -s http://localhost:3001/api/health
 docker compose down
-
-# Update after git pull
-git pull
-docker compose up -d --build
+git pull && docker compose up -d --build
 ```
 
 ---
 
-## Backup (recommended)
-
-Nightly backup to USB/NAS:
+## Backup
 
 ```bash
-bash scripts/backup-photos.sh /mnt/backup/viewphoto
+bash scripts/backup-photos.sh /path/to/backup
 ```
 
-Crontab (every night at 3:00 AM):
+With external storage:
 
-```cron
-0 3 * * * /mnt/storage/ViewPhoto/scripts/backup-photos.sh /mnt/backup/viewphoto >> /var/log/viewphoto-backup.log 2>&1
+```bash
+PHOTOS_MOUNT=/mnt/usb bash scripts/backup-photos.sh /path/to/backup
 ```
-
-The script keeps the last 7 snapshots and prunes older ones.
 
 ---
 
@@ -147,7 +168,7 @@ Original HEIC files stay in `Photos/`; download returns the original file.
 - [ ] Strong `AUTH_PASSWORD` (12+ characters)
 - [ ] Access only via **Tailscale** — do not port-forward 3001 to the internet
 - [ ] `.env` never committed to git
-- [ ] Regular backups of `./Photos`
+- [ ] Regular backups of your photos folder
 
 Login rate limit: 8 attempts per 15 minutes.
 
@@ -157,21 +178,20 @@ Login rate limit: 8 attempts per 15 minutes.
 
 | Problem | Solution |
 |---------|----------|
+| `Cannot find module './routes'` | Incomplete copy — redeploy with `bash scripts/deploy-to-pi.sh` |
 | Container won't start | `docker compose logs viewphoto` |
 | Health returns `503` | Ensure `Photos`, `thumbnails`, `.trash`, `data` exist |
-| Session expired after restart | Normal — sessions are in-memory; log in again |
-| Albums not visible | Restart container; hard refresh browser (Cmd+Shift+R) |
-| Slow first build on Pi | First build takes 5–15 min (sharp + libheif); later builds are faster |
-| Permission denied on volumes | `sudo chown -R $USER:$USER Photos thumbnails .trash data` |
+| Empty gallery after update | Check `docker-compose.override.yml` paths match your USB mount |
+| Permission denied | `sudo bash scripts/fix-pi-permissions.sh` |
+| Slow first build on Pi | Normal (5–15 min for sharp + libheif) |
 
 ---
 
 ## Updating
 
 ```bash
-cd /mnt/storage/ViewPhoto
 git pull
-docker compose up -d --build
+bash scripts/setup-server.sh
 ```
 
-Volumes (`Photos`, `thumbnails`, `.trash`, `data`) are preserved across updates.
+Volumes are preserved across updates.

@@ -22,6 +22,9 @@ data/
 # Local Docker overrides (may contain personal paths)
 docker-compose.override.yml
 
+# Private deploy config (IPs, SSH paths — never commit)
+scripts/deploy.env
+
 # OS / editor
 .DS_Store
 .cursor/

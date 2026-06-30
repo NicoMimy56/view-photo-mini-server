@@ -4,7 +4,9 @@ const {
   resolveFolderPath,
   toRelativePath,
   normalizeFolderPath,
-  assertTypedConfirmation
+  assertTypedConfirmation,
+  encodePhotoId,
+  isAllowedExtension
 } = require("../paths");
 const { FOLDER_DELETE_MODE } = require("../config");
 
@@ -42,31 +44,101 @@ async function countFolderContents(absolutePath) {
   return { photos, subfolders, total: photos + subfolders };
 }
 
+const PREVIEW_MAX = 4;
+
+function pickEvenlySpaced(items, max) {
+  if (items.length <= max) return items;
+  const picked = [];
+  for (let i = 0; i < max; i++) {
+    const idx = Math.floor((i * (items.length - 1)) / (max - 1));
+    picked.push(items[idx]);
+  }
+  return picked;
+}
+
+function mergePreviewIds(directIds, childLists, max = PREVIEW_MAX) {
+  const merged = [...directIds];
+  const seen = new Set(merged);
+
+  for (let round = 0; merged.length < max; round++) {
+    let added = false;
+    for (const childIds of childLists) {
+      const id = childIds[round];
+      if (id && !seen.has(id)) {
+        merged.push(id);
+        seen.add(id);
+        added = true;
+        if (merged.length >= max) break;
+      }
+    }
+    if (!added) break;
+  }
+
+  return merged.slice(0, max);
+}
+
 /**
- * @returns {Promise<Array<{ path: string, name: string, photoCount: number, subfolderCount: number }>>}
+ * @returns {Promise<Array<{ path: string, name: string, photoCount: number, subfolderCount: number, previewIds: string[] }>>}
  */
 async function listFolders() {
   const { PHOTOS_DIR } = require("../config");
   const results = [];
 
   async function walk(currentAbs, currentRel) {
-    const { photos, subfolders } = await countFolderContents(currentAbs);
+    let entries;
+    try {
+      entries = await fs.readdir(currentAbs, { withFileTypes: true });
+    } catch (err) {
+      if (err.code === "ENOENT" && currentRel === "") return [];
+      if (err.code === "ENOENT") {
+        const error = new Error("Folder not found.");
+        error.code = "not_found";
+        throw error;
+      }
+      throw err;
+    }
+
+    let photos = 0;
+    let subfolders = 0;
+    const directPhotoIds = [];
+
+    for (const entry of entries) {
+      if (entry.name.startsWith(".")) continue;
+      if (entry.isDirectory()) {
+        subfolders += 1;
+      } else if (entry.isFile()) {
+        photos += 1;
+        if (isAllowedExtension(entry.name)) {
+          const fileRel = currentRel ? `${currentRel}/${entry.name}` : entry.name;
+          directPhotoIds.push(encodePhotoId(fileRel));
+        }
+      }
+    }
+
+    directPhotoIds.sort((a, b) => a.localeCompare(b, "en"));
+    const directPreviews = pickEvenlySpaced(directPhotoIds, PREVIEW_MAX);
+
+    const childPreviewLists = [];
+    for (const entry of entries) {
+      if (!entry.isDirectory() || entry.name.startsWith(".")) continue;
+      const childRel = currentRel ? `${currentRel}/${entry.name}` : entry.name;
+      const childPreviews = await walk(path.join(currentAbs, entry.name), childRel);
+      if (childPreviews.length) childPreviewLists.push(childPreviews);
+    }
+
+    const previewIds = mergePreviewIds(directPreviews, childPreviewLists, PREVIEW_MAX);
 
     if (currentRel !== "") {
       results.push({
         path: currentRel,
         name: path.basename(currentRel),
         photoCount: photos,
-        subfolderCount: subfolders
+        subfolderCount: subfolders,
+        previewIds
       });
     }
 
-    const entries = await fs.readdir(currentAbs, { withFileTypes: true });
-    for (const entry of entries) {
-      if (!entry.isDirectory() || entry.name.startsWith(".")) continue;
-      const childRel = currentRel ? `${currentRel}/${entry.name}` : entry.name;
-      await walk(path.join(currentAbs, entry.name), childRel);
-    }
+    return previewIds;
   }
 
   await walk(PHOTOS_DIR, "");

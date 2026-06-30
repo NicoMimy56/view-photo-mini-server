@@ -1314,6 +1314,36 @@ code {
     color: var(--accent);
   }
 
+  .mobile-album-cover.mobile-album-cover-mosaic {
+    place-items: stretch;
+    gap: 2px;
+    background: var(--border);
+  }
+
+  .mobile-album-cover-mosaic[data-count="1"] {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .mobile-album-cover-mosaic[data-count="2"] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .mobile-album-cover-mosaic[data-count="3"] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .mobile-album-cover-mosaic[data-count="3"] img:first-child {
+    grid-row: span 2;
+  }
+
+  .mobile-album-cover-mosaic[data-count="4"] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
   .mobile-album-cover img {
     width: 100%;
     height: 100%;

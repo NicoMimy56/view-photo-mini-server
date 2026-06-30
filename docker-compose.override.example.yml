@@ -1,15 +1,17 @@
 # Copy to docker-compose.override.yml (gitignored) to store photos on an external disk.
 #
 #   cp docker-compose.override.example.yml docker-compose.override.yml
-#   mkdir -p /mnt/photos/Photos /mnt/photos/thumbnails /mnt/photos/trash
+#   sudo mkdir -p /mnt/usb/Photos /mnt/usb/thumbnails /mnt/usb/trash
+#   sudo chown -R "$USER:$USER" /mnt/usb
 #   docker compose up -d --build
 #
-# Only override the paths you need. ./data stays in the project folder by default.
+# Edit the host paths below to match your mount point (USB, NAS, etc.).
+# ./data stays in the project folder for album covers and EXIF metadata.
 
 services:
   viewphoto:
     volumes:
-      - /mnt/photos/Photos:/photos
-      - /mnt/photos/thumbnails:/thumbnails
-      - /mnt/photos/trash:/trash
+      - /mnt/usb/Photos:/photos
+      - /mnt/usb/thumbnails:/thumbnails
+      - /mnt/usb/trash:/trash
       - ./data:/data
