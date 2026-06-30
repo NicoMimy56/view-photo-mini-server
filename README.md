@@ -6,6 +6,23 @@ Self-hosted photo and video gallery for a home mini server (Raspberry Pi, CasaOS
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
+## About
+
+**ViewPhoto Mini Server** is a lightweight, private alternative to cloud photo services like Google Photos or iCloud. It runs on hardware you already own — a Raspberry Pi, a home NAS, or any Linux machine — and stores your files as ordinary folders on disk. There is no proprietary database, no vendor lock-in, and no monthly subscription.
+
+The app is designed for **personal and family use** over a private network. A typical setup is a Raspberry Pi with a USB drive for storage, [Tailscale](https://tailscale.com) for secure remote access from your phone, and Docker for easy deployment. You get a clean web interface to browse albums, upload photos and videos from your iPhone, download originals, and manage your library — all without sending data to a third party.
+
+**How it works:** each album is a folder inside a `Photos` directory on the server. Upload a file and it lands on disk. Create a folder and it appears in the sidebar. Delete something and it goes to a trash folder for 7 days before you can permanently remove it. Thumbnails and metadata are generated automatically and cached alongside your files.
+
+**Who is it for?**
+
+- People who want full control over their photo library
+- Raspberry Pi / homelab enthusiasts running CasaOS or Docker
+- iPhone users who want HEIC support and a PWA they can add to the Home Screen
+- Anyone looking for a simple, self-hosted gallery without the complexity of Immich or PhotoPrism
+
+**What it is not:** a multi-user social platform, a face-recognition AI service, or a replacement for professional DAM software. It is a focused tool — browse, upload, organize, download — built to stay small and maintainable.
+
 ## Features
 
 - **Albums as folders** — tree view, create, rename, delete (only when completely empty)
