@@ -17,7 +17,7 @@ COPY . .
 RUN mkdir -p /photos /thumbnails /trash /data
 
 ENV NODE_ENV=production
-ENV TZ=Europe/Rome
+ENV TZ=UTC
 ENV PORT=3001
 ENV PHOTOS_DIR=/photos
 ENV THUMBNAILS_DIR=/thumbnails

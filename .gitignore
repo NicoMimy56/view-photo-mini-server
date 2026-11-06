@@ -7,8 +7,8 @@
 node_modules/
 
 # Photo storage and generated thumbnails
-Photos/*
-!.Photos/.gitkeep
+Photos/**
+!Photos/.gitkeep
 thumbnails/
 
 # Logs

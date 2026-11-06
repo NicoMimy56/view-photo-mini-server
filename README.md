@@ -37,6 +37,39 @@ The app is designed for **personal and family use** over a private network. A ty
 - **Minimal UI** — light/dark theme, mobile-friendly browse
 - **Docker ready** — runs on port **3001** by default (arm64 + amd64)
 
+## Scaricare il progetto
+
+Il repository non contiene foto, password o percorsi del tuo server. Dopo il download si parte da un esempio vuoto e si compilano solo sul proprio computer.
+
+**Con Git**
+
+```bash
+git clone https://github.com/NicoMimy56/view-photo-mini-server.git
+cd view-photo-mini-server
+```
+
+**Senza Git:** sulla pagina GitHub apri **Code → Download ZIP**, scompatta lo zip e entra nella cartella.
+
+Poi, in entrambi i casi:
+
+```bash
+cp .env.example .env
+```
+
+Apri `.env` e cambia `AUTH_PASSWORD` prima di usarlo in rete. Se lo apri da un altro dispositivo, imposta anche `APP_BASE_URL` (per esempio l’indirizzo Tailscale, senza slash finale).
+
+Avvio con Docker:
+
+```bash
+docker compose up -d --build
+```
+
+Apri [http://localhost:3001](http://localhost:3001). Le foto stanno in `Photos/`: ogni cartella è un album.
+
+Per un disco esterno, copia `docker-compose.override.example.yml` in `docker-compose.override.yml` e sostituisci `/mnt/usb` con il tuo punto di montaggio. Quel file resta sul computer e non va pubblicato.
+
+**Non caricare su GitHub** `.env`, `scripts/deploy.env`, `docker-compose.override.yml`, `Photos/`, `thumbnails/`, `.trash/` e `data/`. Sono già elencati in `.gitignore`. Pubblica il progetto con Git, non trascinando la cartella dal Finder: altrimenti finiscono online anche password e foto.
+
 ## Quick start (local development)
 
 ```bash
@@ -134,18 +167,6 @@ bash scripts/backup-photos.sh /path/to/backup
 - **Backend:** Node.js 20, Express 5, sharp (thumbnails + HEIC), multer
 - **Frontend:** Vanilla JS modules, CSS, service worker
 - **Deploy:** Docker, CasaOS compatible
-
-## Publishing this repo
-
-The project is ready to be public. Before switching visibility:
-
-1. Ensure `.env` and `scripts/deploy.env` are **not** tracked (they are in `.gitignore`).
-2. Do not commit personal photos (`Photos/*` is ignored except `.gitkeep`).
-3. Push the latest code, then:
-
-```bash
-gh repo edit NicoMimy56/view-photo-mini-server --visibility public
-```
 
 ## License
 
